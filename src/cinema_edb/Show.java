@@ -5,10 +5,11 @@ import java.util.List;
 
 public class Show {
 	
-	private Seat[][] seatCollection = new Seat[5][10];
+	private Seat[][] seatCollection;
 
-	public Show()
+	public Show(int rows, int seats)
 	{
+		seatCollection = new Seat[rows][seats];
 		NumerateSeats();
 	}
 	
@@ -48,13 +49,41 @@ public class Show {
 		return data;
 	}
 	
+	private List<Integer> SortSeatnumbers(int _size)
+	{
+		int size = _size;
+		List<Integer> sortedList = new ArrayList<Integer>();
+		int i = 0;
+		
+		while(i < size)
+		{
+			if(i % 2 == 0)
+			{
+				sortedList.add(i);
+			}
+			i += 1;
+		}
+		
+		i = 0;
+		while(i < size)
+		{
+			if(i % 2 != 0)
+			{
+				sortedList.add(i);
+			}
+			i += 1;
+		}
+		
+		return sortedList;
+	}
+	
 	private void NumerateSeats()
 	{
 		int numberOfRows = seatCollection.length;
 		int numberOfSeatsOnRow = seatCollection[0].length;
 		int i = 0;
 		
-		int[] seatNumbers = {1,3,5,7,9,2,4,6,8,10};
+		List<Integer> seatNumbers = SortSeatnumbers(numberOfSeatsOnRow); //{1,3,5,7,9,2,4,6,8,10};
 		
 		while(i < numberOfRows)
 		{
@@ -64,7 +93,7 @@ public class Show {
 			{
 				seatCollection[i][j] = new Seat();
 				seatCollection[i][j].rowNr = i + 1;
-				seatCollection[i][j].seatNr = seatNumbers[j];
+				seatCollection[i][j].seatNr = seatNumbers.get(j);
 				j += 1;
 			}
 			i += 1;
@@ -88,7 +117,7 @@ public class Show {
 			seatCount += 1;
 			i += 1;
 			
-			if(seatCount==10)
+			if(seatCount==seatCollection[0].length)
 			{
 				seatCount = 0;
 			}

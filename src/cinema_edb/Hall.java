@@ -4,6 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Hall {
+	
+	private int rows;
+	private int seats;
+	
+	public Hall(int _rows, int _seats)
+	{
+		rows = _rows;
+		seats = _seats;
+	}
+	
 	private List<Show> showList = new ArrayList<Show>();
 	
 	public int GetShowListLenght()
@@ -19,7 +29,7 @@ public class Hall {
 	
 	public void CreateShow()
 	{
-		Show aShow = new Show();
+		Show aShow = new Show(rows,seats);
 		showList.add(aShow);
 	}
 	

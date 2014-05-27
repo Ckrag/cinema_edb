@@ -7,9 +7,9 @@ public class Cinema {
 	
 	private List<Hall> halls = new ArrayList<Hall>();
 	
-	public void CreateHall()
+	public void CreateHall(int _rows, int _seats)
 	{
-		Hall aHall = new Hall();
+		Hall aHall = new Hall(_rows, _seats);
 		halls.add(aHall);
 		System.out.println("Creation: " + "Hall " + (halls.size()-1) + " Created");
 	}
