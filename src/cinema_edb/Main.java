@@ -6,9 +6,10 @@ public class Main {
 		
 		Cinema myCinema = new Cinema();
 		
-		myCinema.CreateHall(6,28);
+		myCinema.CreateHall(4,6);
 		myCinema.CreateShow(0);
-		myCinema.ReserveSeats(0, 0, 55);
+		myCinema.ReserveSeats(0, 0, 4);
+		myCinema.ReserveSeats(0, 0, 7);
 		myCinema.PrintSeatStatus();
 		
 	}
