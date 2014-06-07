@@ -1,19 +1,14 @@
 package cinema_edb;
 
-public class Seat implements ISeat{
-	private int rowNr = 0;
-	private int seatNr = 0;
-	private boolean available = true;
-	
+public interface ISeat {
+
 	/* @ (* Returns the rowNr *);
 	  @ 
 	  @ pre rowNr != null;
 	  @
 	  @ post \result == rowNr;
 	  @*/
-	public /*@ pure @*/ int getRowNr() {
-		return rowNr;
-	}
+	public /*@ pure @*/ int getRowNr();
 	
 	/* @ (* Sets the rowNr *);
 	  @ 
@@ -21,9 +16,7 @@ public class Seat implements ISeat{
 	  @
 	  @ post this.rowNr == rowNr;
 	  @*/
-	public void setRowNr(int rowNr) {
-		this.rowNr = rowNr;
-	}
+	public void setRowNr(int rowNr);
 	
 	/* @ (* Returns the seatNr *);
 	  @ 
@@ -31,9 +24,7 @@ public class Seat implements ISeat{
 	  @
 	  @ post \result == seatNr;
 	  @*/
-	public /*@ pure @*/ int getSeatNr() {
-		return seatNr;
-	}
+	public /*@ pure @*/ int getSeatNr();
 	
 	/* @ (* Sets the seatNr *);
 	  @ 
@@ -41,9 +32,7 @@ public class Seat implements ISeat{
 	  @
 	  @ post this.seatNr == seatNr;
 	  @*/
-	public void setSeatNr(int seatNr) {
-		this.seatNr = seatNr;
-	}
+	public void setSeatNr(int seatNr);
 	
 	/* @ (* Returns the boolean value of available *);
 	  @ 
@@ -51,9 +40,7 @@ public class Seat implements ISeat{
 	  @
 	  @ post \result == available;
 	  @*/
-	public /*@ pure @*/ boolean isAvailable() {
-		return available;
-	}
+	public /*@ pure @*/ boolean isAvailable();
 	
 	/* @ (* Sets the boolean value of available *);
 	  @ 
@@ -61,8 +48,5 @@ public class Seat implements ISeat{
 	  @
 	  @ post this.available == available;
 	  @*/
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
-
+	public void setAvailable(boolean available);
 }

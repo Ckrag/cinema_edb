@@ -24,12 +24,12 @@ public class Show implements IShow{
 	  @ (* antallet af pladser hvor available = false * );
   	  @ POST \result.freeSeats ==	\(forall int i; 0 <= i && i < rowNr;
 	  										\(num_of int j; 0 <= j && j < rowLength; 
-	  											seatCollection[i][j].available == true;););	
+	  											seatCollection[i][j].isAvailable() == true;););	
   	  @
   	  @ (* antallet af pladser hvor available = true * );
 	  @	post \result.reservedSeats == 	\(forall int i; 0 <= i && i < rowNr;
 	  										\(num_of int j; 0 <= j && j < rowLength; 
-	  											seatCollection[i][j].available != true;););																
+	  											seatCollection[i][j].isAvailable() != true;););																
 	  @
 	  @ post \result.consoleGraph != null;
 	  @
@@ -59,7 +59,7 @@ public class Show implements IShow{
 			*/
 			while(j < rowLength)
 			{
-				if(seatCollection[i][j].available)
+				if(seatCollection[i][j].isAvailable())
 				{
 					data.freeSeats++;
 					overview += "[-]";
@@ -136,8 +136,8 @@ public class Show implements IShow{
 	  @	post \result == 	\(forall int i; 0 <= i && i < numberOfRows;
 									\(forall int j; 0 <= j && j < numberOfSeatsOnRow; 
 											seatCollection[i][j] != null;
-											seatCollection[i][j].rowNr = i + 1;
-											seatCollection[i][j].searNr = seatNumbers.get(j););		
+											seatCollection[i][j].getRowNr() = i + 1;
+											seatCollection[i][j].getSeatNr() = seatNumbers.get(j););		
 											
 	  @ 
 	  @ */
@@ -161,14 +161,14 @@ public class Show implements IShow{
 			@ loop_invariant seatCollection != null;
 			@ loop_invariant (\forall int jj; 0 <= jj && jj < numberOfSeatsOnRow; 
 											seatCollection[i][j] != null && 
-											seatCollection[i][j].rowNr == i + 1 &&
-											seatCollection[i][j].seatNr == seatNumbers.get(j));
+											seatCollection[i][j].getRowNr() == i + 1 &&
+											seatCollection[i][j].getSeatNr() == seatNumbers.get(j));
 			*/
 			while(j < numberOfSeatsOnRow)
 			{
 				seatCollection[i][j] = new Seat();
-				seatCollection[i][j].rowNr = i + 1;
-				seatCollection[i][j].seatNr = seatNumbers.get(j);
+				seatCollection[i][j].setRowNr(i + 1);
+				seatCollection[i][j].setSeatNr(seatNumbers.get(j));
 				j += 1;
 			}
 			i += 1;
@@ -181,8 +181,8 @@ public class Show implements IShow{
 	  @ pre seatCollection != null;
 	  @ 
 	  @ post (\forall int ii; 0 <= ii && ii < nrOfWantedSeats; 
-	  							seatCollection[wantedSeats.get(i).rowNr - 1][seatCount].available == false &&  
-	  							seatCount == \old(seatCount) + 1;
+					seatCollection[wantedSeats.get(i).getRowNr() - 1][GetIndexFromSeatNr(wantedSeats.get(i).getRowNr() - 1, wantedSeats.get(i).getSeatNr())].isAvailable() == false &&
+					seatCount == \old(seatCount) + 1;
 	  @ 
 	  @*/
 	public void ReserveSeats(List<Seat> _wantedSeats)
@@ -194,7 +194,7 @@ public class Show implements IShow{
 		
 		/*@
 		@ loop_invariant (\forall int ii; 0 <= ii && ii < nrOfWantedSeats; 
-							seatCollection[wantedSeats.get(ii).rowNr - 1][GetIndexFromSeatNr(wantedSeats.get(ii).rowNr - 1, wantedSeats.get(ii).seatNr)].available == false);
+							seatCollection[wantedSeats.get(i).getRowNr() - 1][GetIndexFromSeatNr(wantedSeats.get(i).getRowNr() - 1, wantedSeats.get(i).getSeatNr())].isAvailable() == false);
 		*/
 		while(i < nrOfWantedSeats)
 		{
@@ -202,9 +202,9 @@ public class Show implements IShow{
 			 * for each seat, it finds the rowNr and seatNr of the
 			 * seat and then goes directly into the seatCollection to set availability
 			 */
-			int rowNr = wantedSeats.get(i).rowNr - 1; //-1 da rowNr starter fra 1 men listen starter fra 0 (indexering)
-			int seatNr = GetIndexFromSeatNr(rowNr, wantedSeats.get(i).seatNr);
-			seatCollection[rowNr][seatNr].available = false;
+			int rowNr = wantedSeats.get(i).getRowNr() - 1; //-1 da rowNr starter fra 1 men listen starter fra 0 (indexering)
+			int seatNr = GetIndexFromSeatNr(rowNr, wantedSeats.get(i).getSeatNr());
+			seatCollection[rowNr][seatNr].setAvailable(false);
 			
 			i += 1;
 		}
@@ -215,7 +215,7 @@ public class Show implements IShow{
 	  @ pre seatCollection != null;
 	  @ pre wantedRow > 0 && wantedRow < seatCollection.length;
 	  @
-	  @ post \result == seatCollection[wantedRow][i].seatNr == wantedSeatNr
+	  @ post \result == seatCollection[wantedRow][i].getSeatNr() == wantedSeatNr
 	  @
 	  @ */
 	private /*@ pure @*/ int GetIndexFromSeatNr(int wantedRow, int wantedSeatNr)
@@ -229,7 +229,7 @@ public class Show implements IShow{
 		@*/
 		while(i < rowLength)
 		{
-			if(seatCollection[wantedRow][i].seatNr == wantedSeatNr)
+			if(seatCollection[wantedRow][i].getSeatNr() == wantedSeatNr)
 			{
 				index = i;
 			}
@@ -251,7 +251,6 @@ public class Show implements IShow{
 	  @*/
 	public /*@ pure @*/ List<Seat> FindSeats(int _seatsNeeded)
 	{		
-		List<Seat> foundSeats = new ArrayList<Seat>();
 		int seatsNeeded = _seatsNeeded;
 
 		if (FindConnectedSeats(seatsNeeded).size() > 0)
@@ -272,7 +271,7 @@ public class Show implements IShow{
 	  @ 
 	  @ post 	(foundSeats.size() == seatsNeeded ==> \result == (\forall int ii; 0 <= ii && ii < rowNr;
 	  						 										(\num_of int jj; 0 <= jj && jj < rowLength;
-	  																		seatCollection[i][j].available == true && seatCollection[i][j+1].available == true || \old(seatCollection[i][j].available == true))))
+	  																		seatCollection[i][j].isAvailable() == true && seatCollection[i][j+1].isAvailable() == true || \old(seatCollection[i][j].isAvailable() == true))))
 	  																		||
 	  			(foundSeats.size() != seatsNeeded ==> \result == foundSeats.size() == 0);
 	  @
@@ -300,7 +299,7 @@ public class Show implements IShow{
 			*/
 			while(j < rowLength)
 			{
-				if (seatCollection[i][j].available)
+				if (seatCollection[i][j].isAvailable())
 				{
 					foundSeats.add(seatCollection[i][j]);
 					
@@ -332,7 +331,7 @@ public class Show implements IShow{
 	  @ 
 	  @ post 	(foundSeats.size() == seatsNeeded ==> \result == (\forall int ii; 0 <= ii && ii < rowNr;
 	  						 										(\num_of int jj; 0 <= jj && jj < rowLength;
-	  																		seatCollection[i][j].available)))
+	  																		seatCollection[i][j].asAvailable() == true)))
 	  																		||
 	  			(foundSeats.size() != seatsNeeded ==> \result == foundSeats.size() == 0);
 	  @
@@ -360,7 +359,7 @@ public class Show implements IShow{
 			*/
 			while(j < rowLength)
 			{
-				if (seatCollection[i][j].available)
+				if (seatCollection[i][j].isAvailable())
 				{
 					foundSeats.add(seatCollection[i][j]);
 					

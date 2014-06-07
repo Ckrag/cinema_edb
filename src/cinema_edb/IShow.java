@@ -14,12 +14,12 @@ public interface IShow {
 	  @ (* antallet af pladser hvor available = false * );
 	  @ POST \result.freeSeats ==	\(forall int i; 0 <= i && i < rowNr;
 	  										\(num_of int j; 0 <= j && j < rowLength; 
-	  											seatCollection[i][j].available == true;););	
+	  											seatCollection[i][j].isAvailable() == true;););	
 	  @
 	  @ (* antallet af pladser hvor available = true * );
 	  @	post \result.reservedSeats == 	\(forall int i; 0 <= i && i < rowNr;
 	  										\(num_of int j; 0 <= j && j < rowLength; 
-	  											seatCollection[i][j].available != true;););																
+	  											seatCollection[i][j].isAvailable() != true;););																
 	  @
 	  @ post \result.consoleGraph != null;
 	  @
@@ -32,8 +32,8 @@ public interface IShow {
 	  @ pre seatCollection != null;
 	  @ 
 	  @ post (\forall int ii; 0 <= ii && ii < nrOfWantedSeats; 
-	  							seatCollection[wantedSeats.get(i).rowNr - 1][seatCount].available == false &&  
-	  							seatCount == \old(seatCount) + 1;
+					seatCollection[wantedSeats.get(i).getRowNr() - 1][GetIndexFromSeatNr(wantedSeats.get(i).getRowNr() - 1, wantedSeats.get(i).getSeatNr())].isAvailable() == false &&
+					seatCount == \old(seatCount) + 1;
 	  @ 
 	  @*/
 	public void ReserveSeats(List<Seat> _wantedSeats);
